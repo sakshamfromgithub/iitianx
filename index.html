@@ -1,11 +1,1113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>IITianX</title>
+    <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --line: #e6e6e6;
+            --muted: #666;
+            --danger: #b00020;
+            --ok: #0a7a2f;
+            --soft: #f7f7f7;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--white);
+            color: #111
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--black);
+            color: var(--white);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: .2px
+        }
+
+        .meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 14px
+        }
+
+        .pill {
+            border: 1px solid rgba(255, 255, 255, .25);
+            padding: 6px 10px;
+            border-radius: 999px
+        }
+
+        .btn {
+            border: 1px solid rgba(255, 255, 255, .35);
+            background: transparent;
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        .btn.light {
+            border: 1px solid #111;
+            background: #111;
+            color: #fff;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px
+        }
+
+        p {
+            margin: 8px 0;
+            color: #222;
+            line-height: 1.5
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        /* ===== NEW: Tabs ===== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px;
+            background: var(--white);
+            margin-bottom: 12px;
+        }
+
+        .tab {
+            border: 1px solid var(--line);
+            background: var(--white);
+            color: #111;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+        /* ===== NEW: Quiz layout (main + right panel) ===== */
+        .quizLayout {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 12px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .quizLayout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .panelHd {
+            padding: 10px 12px;
+            font-weight: 900;
+            border-bottom: 1px solid var(--line);
+            background: var(--soft);
+        }
+
+        .panelBd {
+            padding: 12px
+        }
+
+        .qGrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .qNum {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 900;
+            cursor: pointer;
+            user-select: none;
+            background: #fff;
+        }
+
+        .qNum.active {
+            border-color: #111;
+            outline: 2px solid rgba(0, 0, 0, .12);
+        }
+
+        .qNum.answered {
+            background: #f1f1f1;
+            /* only gray */
+            border-color: #cfcfcf;
+        }
+
+        /* ===== NEW: Image question box ===== */
+        .imgBox {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .imgBox img {
+            width: 100%;
+            display: block;
+            background: #fff;
+        }
+
+        .imgFallback {
+            padding: 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .opt {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .opt input {
+            margin-top: 3px
+        }
+
+        .nav {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
+        .nav button {
+            border: 1px solid #111;
+            background: #111;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .nav button.secondary {
+            background: #fff;
+            color: #111
+        }
+
+        .nav button:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        /* Topic tag exists but hidden during quiz time */
+        .topicTag {
+            display: none;
+        }
+
+        /* Modal */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: flex
+        }
+
+        .modal {
+            width: min(520px, 100%);
+            background: #fff;
+            color: #111;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            padding: 14px;
+        }
+
+        .modal h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px
+        }
+
+        .modal .mfoot {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap
+        }
+
+        .modal .mfoot button {
+            border: 1px solid #111;
+            background: #111;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .modal .mfoot button.secondary {
+            background: #fff;
+            color: #111
+        }
+
+        /* Report */
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px
+        }
+
+        .kpi {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px
+        }
+
+        .kpi .n {
+            font-size: 22px;
+            font-weight: 800
+        }
+
+        .kpi .l {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px
+        }
+
+        @media(max-width:720px) {
+            .kpis {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        .section {
+            margin-top: 12px
+        }
+
+        .topicRow {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 12px;
+            border: 1px solid var(--line);
+            padding: 4px 8px;
+            border-radius: 999px;
+            color: #333
+        }
+
+        .good {
+            color: var(--ok);
+            font-weight: 700
+        }
+
+        .bad {
+            color: var(--danger);
+            font-weight: 700
+        }
+
+        .reviewItem {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px
+        }
+
+        .reviewItem .top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .reviewItem .ans {
+            margin-top: 8px;
+            font-size: 14px
+        }
+
+        .reviewItem .exp {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #333
+        }
+
+        .reviewQImg {
+            width: 220px;
+            max-width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+            margin-top: 10px;
+        }
+
+        .reviewQImg img {
+            width: 100%;
+            display: block;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>starting soon...</h1>
+
+    <div class="topbar">
+        <div class="brand">JEE Main Test</div>
+        <div class="meta">
+            <div class="pill"><b id="timerTxt"></b></div>
+            <div class="pill" id="stateTxt">Not started</div>
+            <button class="btn" id="exitBtn" disabled>Exit</button>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <div class="card" id="startCard">
+            <h2>Start Test</h2>
+            <p class="muted">
+                Rules:
+                Fullscreen is required. If you exit fullscreen, the test will pause and you will see a popup.
+                <br>Time: <b>3 hours</b>
+                <br>Marking: <b>+4</b> for correct, <b>-1</b> for wrong, <b>0</b> for unattempted
+            </p>
+            <div class="actions">
+                <button class="btn light" id="startBtn">Start (Fullscreen)</button>
+                <button class="btn light" id="reloadBtn">Reload Questions</button>
+                <span class="muted" id="loadInfo">Not loaded</span>
+            </div>
+            <p class="muted">
+                Note: If fetch fails, open with a local server (VS Code Live Server).
+            </p>
+        </div>
+
+        <div class="card" id="quizCard" style="display:none">
+            <!-- NEW: Tabs -->
+            <div class="tabs" id="tabs"></div>
+
+            <div class="row" style="margin-bottom:10px">
+                <div class="muted" id="progressTxt">0/0</div>
+                <div class="muted">Select option. Use Next/Previous. Submit at the end.</div>
+            </div>
+
+            <div class="quizLayout">
+                <!-- Main area -->
+                <div class="panel">
+                    <div class="panelHd" id="qTitle">Question</div>
+                    <div class="panelBd">
+                        <div class="imgBox" id="imgBox"></div>
+
+                        <div class="options" id="optBox"></div>
+
+                        <div class="nav">
+                            <button class="secondary" id="prevBtn">Previous</button>
+                            <button class="secondary" id="nextBtn">Next</button>
+                            <button id="submitBtn">Submit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right question numbers -->
+                <div class="panel">
+                    <div class="panelHd">Questions</div>
+                    <div class="panelBd">
+                        <div class="qGrid" id="qGrid"></div>
+                        <div style="height:10px"></div>
+                        <div class="muted">Gray = answered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="reportCard" style="display:none">
+            <div class="row">
+                <h2 style="margin:0">Test Report</h2>
+                <div class="muted" id="reportReason">—</div>
+            </div>
+            <hr style="border:none;border-top:1px solid var(--line);margin:12px 0">
+            <div id="reportBody"></div>
+        </div>
+    </div>
+
+    <!-- Fullscreen modal -->
+    <div class="overlay" id="fsOverlay">
+        <div class="modal">
+            <h3>Fullscreen required</h3>
+            <div class="muted" id="fsMsg">You exited fullscreen. The test is paused.</div>
+            <div class="mfoot">
+                <button class="secondary" id="fsExit">Exit test</button>
+                <button id="fsAllow">Allow fullscreen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIG =====
+        const QUESTIONS_URL = "question.json";
+        const QUIZ_TIME_MINUTES = 180;  // 3 hours
+        const MARKS_CORRECT = 4;
+        const MARKS_WRONG = -1;
+
+        const SUBJECTS = ["physics", "chemistry", "maths"];
+        const SUBJECT_LABEL = { physics: "Physics", chemistry: "Chemistry", maths: "Maths" };
+
+        // ===== State =====
+        let allQuestions = [];
+        let bySubject = { physics: [], chemistry: [], maths: [] };
+
+        let currentSubject = "physics";
+        let idx = 0;
+
+        let started = false;
+        let pausedByFullscreen = false;
+
+        let remainingMs = QUIZ_TIME_MINUTES * 60 * 1000;
+        let timer = null;
+        let lastTick = null;
+
+        // answers: Map<id, { selectedIndex: number|null }>
+        const answers = new Map();
+
+        // ===== Elements =====
+        const startCard = document.getElementById("startCard");
+        const quizCard = document.getElementById("quizCard");
+        const reportCard = document.getElementById("reportCard");
+
+        const startBtn = document.getElementById("startBtn");
+        const reloadBtn = document.getElementById("reloadBtn");
+        const loadInfo = document.getElementById("loadInfo");
+
+        const exitBtn = document.getElementById("exitBtn");
+        const timerTxt = document.getElementById("timerTxt");
+        const stateTxt = document.getElementById("stateTxt");
+        const progressTxt = document.getElementById("progressTxt");
+
+        const tabsEl = document.getElementById("tabs");
+
+        const qTitle = document.getElementById("qTitle");
+        const imgBox = document.getElementById("imgBox");
+        const optBox = document.getElementById("optBox");
+        const qGrid = document.getElementById("qGrid");
+
+        const reportReason = document.getElementById("reportReason");
+        const reportBody = document.getElementById("reportBody");
+
+        const fsOverlay = document.getElementById("fsOverlay");
+        const fsAllow = document.getElementById("fsAllow");
+        const fsExit = document.getElementById("fsExit");
+        const fsMsg = document.getElementById("fsMsg");
+
+        // ===== Helpers =====
+        function escapeHtml(s) {
+            return String(s)
+                .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;").replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function isFullscreen() { return !!document.fullscreenElement; }
+
+        function formatHMS(ms) {
+            ms = Math.max(0, ms);
+            const total = Math.floor(ms / 1000);
+            const h = Math.floor(total / 3600);
+            const m = Math.floor((total % 3600) / 60);
+            const s = total % 60;
+            return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+        }
+
+        function ensureState(qid) {
+            if (!answers.has(qid)) answers.set(qid, { selectedIndex: null });
+            return answers.get(qid);
+        }
+
+        function getList() {
+            return bySubject[currentSubject] || [];
+        }
+
+        function getCurrentQuestion() {
+            const list = getList();
+            return list[idx] || null;
+        }
+
+        // ===== Load Questions =====
+        async function loadQuestions() {
+            try {
+                loadInfo.textContent = "Loading...";
+                const res = await fetch(QUESTIONS_URL, { cache: "no-store" });
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error("question.json must be an array");
+
+                allQuestions = data.map((q, i) => ({
+                    id: q.id ?? ("q" + (i + 1)),
+                    subject: String(q.subject ?? "").toLowerCase(),
+                    topic: String(q.topic ?? "General"),
+                    imageUrl: String(q.imageUrl ?? ""),
+                    options: Array.isArray(q.options) ? q.options.map(String) : [],
+                    answerIndex: Number.isInteger(q.answerIndex) ? q.answerIndex : -1,
+                    explanation: q.explanation != null ? String(q.explanation) : ""
+                })).filter(q =>
+                    SUBJECTS.includes(q.subject) &&
+                    q.options.length >= 2
+                );
+
+                bySubject = { physics: [], chemistry: [], maths: [] };
+                for (const q of allQuestions) {
+                    bySubject[q.subject].push(q);
+                    ensureState(q.id);
+                }
+
+                // default subject: first non-empty
+                currentSubject = SUBJECTS.find(s => bySubject[s].length > 0) || "physics";
+                idx = 0;
+
+                loadInfo.textContent = `Loaded: ${allQuestions.length} questions`;
+                renderTabs();
+                if (started) renderQuizUI();
+
+            } catch (e) {
+                console.error(e);
+                allQuestions = [];
+                bySubject = { physics: [], chemistry: [], maths: [] };
+                loadInfo.textContent = "Load failed";
+                alert("Failed to load question.json. (Open via Live Server)");
+            }
+        }
+
+        // ===== UI show/hide =====
+        function showStart() {
+            startCard.style.display = "";
+            quizCard.style.display = "none";
+            reportCard.style.display = "none";
+            exitBtn.disabled = true;
+            stateTxt.textContent = "Not started";
+            timerTxt.textContent = "--:--:--";
+        }
+
+        function showQuiz() {
+            startCard.style.display = "none";
+            quizCard.style.display = "";
+            reportCard.style.display = "none";
+            exitBtn.disabled = false;
+        }
+
+        function showReport() {
+            startCard.style.display = "none";
+            quizCard.style.display = "none";
+            reportCard.style.display = "";
+            exitBtn.disabled = true;
+        }
+
+        // ===== Fullscreen modal =====
+        function openFsModal(text) {
+            fsMsg.textContent = text || "You exited fullscreen. The test is paused.";
+            fsOverlay.classList.add("show");
+        }
+        function closeFsModal() {
+            fsOverlay.classList.remove("show");
+        }
+
+        // ===== Timer =====
+        function startTimer() {
+            stateTxt.textContent = "Running";
+            lastTick = performance.now();
+            timer = setInterval(() => {
+                if (!started) return;
+                if (pausedByFullscreen) return;
+
+                const now = performance.now();
+                const delta = now - lastTick;
+                lastTick = now;
+                remainingMs -= delta;
+
+                if (remainingMs <= 0) {
+                    remainingMs = 0;
+                    timerTxt.textContent = formatHMS(remainingMs);
+                    submitTest("Time up", { askConfirm: false });
+                    return;
+                }
+                timerTxt.textContent = formatHMS(remainingMs);
+            }, 250);
+        }
+
+        function stopTimer() {
+            if (timer) clearInterval(timer);
+            timer = null;
+            lastTick = null;
+        }
+
+        // ===== Tabs =====
+        function renderTabs() {
+            tabsEl.innerHTML = SUBJECTS.map(s => {
+                const active = (s === currentSubject) ? "active" : "";
+                return `<button class="tab ${active}" data-sub="${s}">${SUBJECT_LABEL[s]}</button>`;
+            }).join("");
+
+            tabsEl.querySelectorAll(".tab").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const sub = btn.getAttribute("data-sub");
+                    currentSubject = sub;
+                    idx = 0;
+                    renderTabs();
+                    renderQuizUI();
+                });
+            });
+        }
+
+        // ===== Right question numbers =====
+        function renderQGrid() {
+            const list = getList();
+            qGrid.innerHTML = list.map((q, i) => {
+                const st = ensureState(q.id);
+                const answered = (st.selectedIndex !== null && st.selectedIndex !== undefined);
+                const cls = [
+                    "qNum",
+                    (i === idx ? "active" : ""),
+                    (answered ? "answered" : "")
+                ].join(" ");
+                return `<div class="${cls}" data-i="${i}">${i + 1}</div>`;
+            }).join("");
+
+            qGrid.querySelectorAll(".qNum").forEach(b => {
+                b.addEventListener("click", () => {
+                    idx = Number(b.getAttribute("data-i"));
+                    renderQuestion();
+                    renderQGrid();
+                });
+            });
+        }
+
+        // ===== Render Question (IMAGE ONLY) =====
+        function renderQuestion() {
+            const q = getCurrentQuestion();
+            const list = getList();
+
+            if (!q) {
+                qTitle.textContent = "No questions in this section";
+                imgBox.innerHTML = `<div class="imgFallback">No question found.</div>`;
+                optBox.innerHTML = "";
+                progressTxt.textContent = "0/0";
+                return;
+            }
+
+            qTitle.textContent = `Question ${idx + 1}`;
+            progressTxt.textContent = `${idx + 1}/${list.length}`;
+
+            // image
+            if (q.imageUrl) {
+                imgBox.innerHTML = `<img src="${escapeHtml(q.imageUrl)}" alt="Question image">`;
+            } else {
+                imgBox.innerHTML = `<div class="imgFallback">Image URL missing in JSON (imageUrl).</div>`;
+            }
+
+            // options
+            const st = ensureState(q.id);
+            const optsHtml = q.options.map((opt, i) => {
+                const checked = (st.selectedIndex === i) ? "checked" : "";
+                return `
+          <label class="opt">
+            <input type="radio" name="opt" value="${i}" ${checked} />
+            <div>${escapeHtml(opt)}</div>
+          </label>
+        `;
+            }).join("");
+
+            optBox.innerHTML = optsHtml;
+
+            optBox.querySelectorAll('input[name="opt"]').forEach(r => {
+                r.addEventListener("change", (e) => {
+                    const v = Number(e.target.value);
+                    st.selectedIndex = Number.isFinite(v) ? v : null;
+                    renderQGrid(); // update answered state
+                });
+            });
+
+            // wire prev/next inside current subject list
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+
+            prevBtn.disabled = (idx === 0);
+            nextBtn.disabled = (idx === list.length - 1);
+
+            prevBtn.onclick = () => {
+                idx = Math.max(0, idx - 1);
+                renderQuestion();
+                renderQGrid();
+            };
+            nextBtn.onclick = () => {
+                idx = Math.min(list.length - 1, idx + 1);
+                renderQuestion();
+                renderQGrid();
+            };
+        }
+
+        function renderQuizUI() {
+            renderTabs();
+            renderQGrid();
+            renderQuestion();
+        }
+
+        // ===== Report (same logic, but question as image in review) =====
+        function computeReport() {
+            let correct = 0, wrong = 0, unattempted = 0;
+
+            const topicStats = new Map();
+
+            const perQ = allQuestions.map((q, i) => {
+                const st = ensureState(q.id);
+                const sel = st.selectedIndex;
+
+                let status = "unattempted";
+                if (sel === null || sel === undefined) {
+                    unattempted++;
+                } else if (sel === q.answerIndex) {
+                    correct++;
+                    status = "correct";
+                } else {
+                    wrong++;
+                    status = "wrong";
+                }
+
+                if (!topicStats.has(q.topic)) {
+                    topicStats.set(q.topic, { total: 0, correct: 0, wrong: 0, unattempted: 0 });
+                }
+                const t = topicStats.get(q.topic);
+                t.total++;
+                t[status]++;
+
+                return {
+                    no: i + 1,
+                    topic: q.topic,
+                    subject: q.subject,
+                    imageUrl: q.imageUrl,
+                    options: q.options,
+                    answerIndex: q.answerIndex,
+                    selectedIndex: sel,
+                    status,
+                    explanation: q.explanation
+                };
+            });
+
+            const score = (correct * MARKS_CORRECT) + (wrong * MARKS_WRONG);
+
+            const topicArr = [...topicStats.entries()].map(([name, s]) => {
+                const attempted = s.correct + s.wrong;
+                const acc = attempted === 0 ? 0 : (s.correct / attempted);
+                return { name, ...s, attempted, accuracy: acc };
+            }).sort((a, b) => a.accuracy - b.accuracy);
+
+            const weakTopics = topicArr.filter(t => t.total >= 2).slice(0, 5);
+
+            return { total: allQuestions.length, correct, wrong, unattempted, score, perQ, topicArr, weakTopics };
+        }
+
+        function renderReport(reason) {
+            const rep = computeReport();
+            reportReason.textContent = reason;
+
+            const weakHtml = rep.weakTopics.length ? rep.weakTopics.map(t => {
+                const pct = Math.round(t.accuracy * 100);
+                return `
+          <div class="topicRow">
+            <div>
+              <b>${escapeHtml(t.name)}</b>
+              <div class="muted">Correct ${t.correct}, Wrong ${t.wrong}, Unattempted ${t.unattempted}</div>
+            </div>
+            <span class="badge">${pct}% accuracy</span>
+          </div>
+        `;
+            }).join("") : `<div class="muted">Not enough topic data to highlight weak topics.</div>`;
+
+            const topicsHtml = rep.topicArr.map(t => {
+                const pct = Math.round(t.accuracy * 100);
+                const label = (t.attempted === 0) ? "Not attempted" : (pct + "% accuracy");
+                return `
+          <div class="topicRow">
+            <div>
+              <b>${escapeHtml(t.name)}</b>
+              <div class="muted">Correct ${t.correct}, Wrong ${t.wrong}, Unattempted ${t.unattempted}</div>
+            </div>
+            <span class="badge">${label}</span>
+          </div>
+        `;
+            }).join("");
+
+            const reviewHtml = rep.perQ.map(q => {
+                const yourAns = (q.selectedIndex === null || q.selectedIndex === undefined)
+                    ? "Not answered"
+                    : q.options[q.selectedIndex];
+
+                const correctAns = (q.answerIndex >= 0 && q.answerIndex < q.options.length)
+                    ? q.options[q.answerIndex]
+                    : "N/A";
+
+                const statusText = q.status === "correct"
+                    ? `<span class="good">Correct (+${MARKS_CORRECT})</span>`
+                    : q.status === "wrong"
+                        ? `<span class="bad">Wrong (${MARKS_WRONG})</span>`
+                        : `<span class="muted">Unattempted (0)</span>`;
+
+                const exp = q.explanation
+                    ? `<div class="exp"><b>Explanation:</b> ${escapeHtml(q.explanation)}</div>`
+                    : "";
+
+                const img = q.imageUrl
+                    ? `<div class="reviewQImg">
+       <img src="${escapeHtml(q.imageUrl)}" alt="Question image">
+     </div>`
+                    : "";
+
+                return `
+          <div class="reviewItem">
+            <div class="top">
+              <div><b>Q${q.no}</b> <span class="badge">${escapeHtml(q.subject)}</span> <span class="badge">${escapeHtml(q.topic)}</span></div>
+              <div>${statusText}</div>
+            </div>
+            ${img}
+            <div class="ans"><b>Your answer:</b> ${escapeHtml(yourAns)}</div>
+            <div class="ans"><b>Correct answer:</b> ${escapeHtml(correctAns)}</div>
+            ${exp}
+          </div>
+        `;
+            }).join("");
+
+            reportBody.innerHTML = `
+        <div class="kpis">
+          <div class="kpi"><div class="n">${rep.score}</div><div class="l">Total Marks</div></div>
+          <div class="kpi"><div class="n">${rep.correct}</div><div class="l">Correct</div></div>
+          <div class="kpi"><div class="n">${rep.wrong}</div><div class="l">Wrong</div></div>
+          <div class="kpi"><div class="n">${rep.unattempted}</div><div class="l">Unattempted</div></div>
+        </div>
+
+        <div class="section">
+          <h2>Weak Topics</h2>
+          ${weakHtml}
+        </div>
+
+        <div class="section">
+          <h2>Topic-wise Performance</h2>
+          ${topicsHtml}
+        </div>
+
+        <div class="section">
+          <h2>Detailed Analysis</h2>
+          ${reviewHtml}
+        </div>
+
+        <div class="section">
+          <button class="btn light" id="restartBtn">Restart</button>
+        </div>
+      `;
+
+            document.getElementById("restartBtn").addEventListener("click", resetAll);
+        }
+
+        // ===== Submit =====
+        function submitTest(reason, opts = { askConfirm: false }) {
+            if (!started) return;
+
+            if (opts.askConfirm) {
+                const ok = confirm("Are you sure?");
+                if (!ok) return;
+            }
+
+            started = false;
+            stopTimer();
+            closeFsModal();
+            stateTxt.textContent = "Finished";
+
+            if (isFullscreen()) {
+                document.exitFullscreen().catch(() => { });
+            }
+
+            showReport();
+            renderReport(reason);
+        }
+
+        function resetAll() {
+            stopTimer();
+            answers.clear();
+            // keep questions loaded, reset selections
+            for (const q of allQuestions) ensureState(q.id);
+
+            idx = 0;
+            started = false;
+            pausedByFullscreen = false;
+            remainingMs = QUIZ_TIME_MINUTES * 60 * 1000;
+
+            timerTxt.textContent = "--:--:--";
+            stateTxt.textContent = "Not started";
+            closeFsModal();
+            showStart();
+        }
+
+        // ===== Fullscreen =====
+        async function requestFullscreen() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) return el.requestFullscreen();
+            throw new Error("Fullscreen not supported");
+        }
+
+        function onFullscreenChange() {
+            if (!started) return;
+
+            if (!isFullscreen()) {
+                pausedByFullscreen = true;
+                stateTxt.textContent = "Paused (Fullscreen)";
+                openFsModal("You exited fullscreen. The test is paused.");
+            } else {
+                if (pausedByFullscreen) {
+                    pausedByFullscreen = false;
+                    stateTxt.textContent = "Running";
+                    closeFsModal();
+                    lastTick = performance.now();
+                }
+            }
+        }
+
+        // ===== Events =====
+        reloadBtn.addEventListener("click", loadQuestions);
+
+        startBtn.addEventListener("click", async () => {
+            if (allQuestions.length === 0) {
+                alert("Please load questions first.");
+                return;
+            }
+            try {
+                await requestFullscreen();
+            } catch (e) {
+                alert("Fullscreen permission denied.");
+                return;
+            }
+
+            started = true;
+            pausedByFullscreen = false;
+            idx = 0;
+            remainingMs = QUIZ_TIME_MINUTES * 60 * 1000;
+
+            timerTxt.textContent = formatHMS(remainingMs);
+            showQuiz();
+            renderQuizUI();
+            startTimer();
+        });
+
+        exitBtn.addEventListener("click", () => {
+            if (!started) return;
+            if (confirm("Exit test and submit report?")) submitTest("Exited by user", { askConfirm: false });
+        });
+
+        fsAllow.addEventListener("click", async () => {
+            try { await requestFullscreen(); } catch (e) { alert("Fullscreen permission denied."); }
+        });
+
+        fsExit.addEventListener("click", () => submitTest("Exited after fullscreen warning", { askConfirm: false }));
+
+        document.addEventListener("fullscreenchange", onFullscreenChange);
+
+        // submit button confirm
+        document.addEventListener("click", (e) => {
+            if (e.target && e.target.id === "submitBtn") {
+                submitTest("Submitted", { askConfirm: true });
+            }
+        });
+
+        // ===== Boot =====
+        (function init() {
+            showStart();
+            loadQuestions();
+        })();
+    </script>
 </body>
+
 </html>
